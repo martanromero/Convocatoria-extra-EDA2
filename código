@@ -1,0 +1,66 @@
+class Banco:
+    def __init__(self):
+        self.cola_prioritarios = []  # Cola para clientes prioritarios
+        self.cola_regulares = []     # Cola para clientes regulares
+        self.clientes_atendidos = 0  # Contador de clientes atendidos
+
+    def añadir_cliente(self, nombre, tipo):
+        if not nombre.strip():
+            print("Error: El nombre no puede estar vacío.")
+            return
+        tipo = tipo.lower()
+        if tipo not in ['prioritario', 'regular']:
+            print("Error: Tipo de cliente inválido. Usa 'prioritario' o 'regular'.")
+            return
+
+        if tipo == 'prioritario':
+            self.cola_prioritarios.append(nombre)
+        else:
+            self.cola_regulares.append(nombre)
+        print(f"Cliente añadido: {nombre} ({tipo})")
+
+    def atender_cliente(self):
+        if self.cola_prioritarios:
+            cliente = self.cola_prioritarios.pop(0)
+            self.clientes_atendidos += 1
+            print(f"Atendiendo cliente prioritario: {cliente}")
+        elif self.cola_regulares:
+            cliente = self.cola_regulares.pop(0)
+            self.clientes_atendidos += 1
+            print(f"Atendiendo cliente regular: {cliente}")
+        else:
+            print("No hay clientes en la cola para atender.")
+
+    def mostrar_estado_cola(self):
+        print("\n--- Estado Actual de la Cola ---")
+        print("Clientes Prioritarios:")
+        if self.cola_prioritarios:
+            for cliente in self.cola_prioritarios:
+                print(f"  - {cliente}")
+        else:
+            print("  (Ninguno)")
+
+        print("Clientes Regulares:")
+        if self.cola_regulares:
+            for cliente in self.cola_regulares:
+                print(f"  - {cliente}")
+        else:
+            print("  (Ninguno)")
+
+        print(f"\nClientes atendidos hasta ahora: {self.clientes_atendidos}")
+        print("--------------------------------\n")
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    banco = Banco()
+    banco.añadir_cliente("Ana", "Prioritario")
+    banco.añadir_cliente("Luis", "Regular")
+    banco.añadir_cliente("Marta", "Prioritario")
+    banco.añadir_cliente("Carlos", "Regular")
+    banco.añadir_cliente(" ", "Regular")            # Prueba de nombre vacío
+    banco.añadir_cliente("Pedro", "VIP")            # Prueba de tipo inválido
+
+    banco.mostrar_estado_cola()
+    banco.atender_cliente()
+    banco.atender_cliente()
+    banco.mostrar_estado_cola()
