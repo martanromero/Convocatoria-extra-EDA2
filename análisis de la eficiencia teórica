@@ -1,0 +1,85 @@
+#Análisis de eficiencia teórica
+class Banco:
+    def __init__(self):
+        # Uso de dos colas como listas:
+        # Agregar al final: O(1)
+        # Atender con pop(0): O(n) porque requiere desplazar los elementos restantes
+        self.cola_prioritarios = []  # Cola para clientes prioritarios
+        self.cola_regulares = []     # Cola para clientes regulares
+
+        # Contador de clientes atendidos: incrementar es O(1)
+        self.clientes_atendidos = 0
+
+    def añadir_cliente(self, nombre, tipo):
+        # Validación: O(1)
+        if not nombre.strip():
+            print("Error: El nombre no puede estar vacío.")
+            return
+
+        tipo = tipo.lower()
+        if tipo not in ['prioritario', 'regular']:
+            print("Error: Tipo de cliente inválido. Usa 'prioritario' o 'regular'.")
+            return
+
+        # Añadir al final de la cola: O(1)
+        if tipo == 'prioritario':
+            self.cola_prioritarios.append(nombre)
+        else:
+            self.cola_regulares.append(nombre)
+
+        print(f"Cliente añadido: {nombre} ({tipo})")
+
+    def atender_cliente(self):
+        # Atender cliente prioritario si hay (pop(0)): O(n)
+        if self.cola_prioritarios:
+            cliente = self.cola_prioritarios.pop(0)
+            self.clientes_atendidos += 1  # O(1)
+            print(f"Atendiendo cliente prioritario: {cliente}")
+        elif self.cola_regulares:
+            cliente = self.cola_regulares.pop(0)
+            self.clientes_atendidos += 1  # O(1)
+            print(f"Atendiendo cliente regular: {cliente}")
+        else:
+            print("No hay clientes en la cola para atender.")
+
+    def mostrar_estado_cola(self):
+        # Mostrar estado recorre ambas listas: O(n)
+        print("\n--- Estado Actual de la Cola ---")
+
+        print("Clientes Prioritarios:")
+        if self.cola_prioritarios:
+            for cliente in self.cola_prioritarios:
+                print(f"  - {cliente}")
+        else:
+            print("  (Ninguno)")
+
+        print("Clientes Regulares:")
+        if self.cola_regulares:
+            for cliente in self.cola_regulares:
+                print(f"  - {cliente}")
+        else:
+            print("  (Ninguno)")
+
+        print(f"\nClientes atendidos hasta ahora: {self.clientes_atendidos}")
+        print("--------------------------------\n")
+
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    banco = Banco()
+
+    # Añadir clientes (válidos e inválidos)
+    banco.añadir_cliente("Ana", "Prioritario")     # válido
+    banco.añadir_cliente("Luis", "Regular")        # válido
+    banco.añadir_cliente("Marta", "Prioritario")   # válido
+    banco.añadir_cliente("Carlos", "Regular")      # válido
+    banco.añadir_cliente(" ", "Regular")           # inválido (nombre vacío)
+    banco.añadir_cliente("Pedro", "VIP")           # inválido (tipo no válido)
+
+    banco.mostrar_estado_cola()
+
+    # Atender clientes
+    banco.atender_cliente()
+    banco.atender_cliente()
+
+    banco.mostrar_estado_cola()
